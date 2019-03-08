@@ -5,48 +5,30 @@
 #include "sand_box.h"
 #include "SystemFont5x7.h"
 #include "Arial_black_16.h"
+#define SELECT_RED        4//Chọn màu Đỏ
+#define SELECT_GREEN      5//CHọn màu Xanh
 //Fire up the DMD library as dmd
 #define DISPLAYS_ACROSS 1
 #define DISPLAYS_DOWN 1
 DMD dmd(DISPLAYS_ACROSS, DISPLAYS_DOWN);
-
-unsigned long long count=0;
-int second=0;
-
-
-void draw3(){
-  dmd.drawLine(22,8,29,8,GRAPHICS_NORMAL);
-  dmd.drawLine(27,6,27,7,GRAPHICS_NORMAL);
-  dmd.drawLine(24,5,22,5,GRAPHICS_NORMAL);
-  dmd.drawLine(22,9,29,9,GRAPHICS_NORMAL);
-  dmd.drawLine(27,7,27,8,GRAPHICS_NORMAL);
-  dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
-  dmd.drawLine(25,7,25,9,GRAPHICS_INVERSE);
-  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
-  dmd.drawLine(28,10,22,10,GRAPHICS_INVERSE);
-  
-};
-void draw2(){
-  dmd.drawLine(24,10,22,10,GRAPHICS_NORMAL);
-  dmd.drawLine(25,7,25,9,GRAPHICS_NORMAL);
-  dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
-  dmd.drawLine(25,5,25,10,GRAPHICS_INVERSE);
-  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
-  dmd.drawLine(28,10,26,10,GRAPHICS_INVERSE);
-  dmd.drawLine(24,5,22,5,GRAPHICS_INVERSE);
-  
-}
-void draw1(){
-  dmd.drawLine(25,5,25,10,GRAPHICS_NORMAL);
-  dmd.drawLine(28,10,22,10,GRAPHICS_NORMAL);
-  dmd.drawLine(24,5,22,5,GRAPHICS_NORMAL);
-  dmd.drawLine(29,5,29,10,GRAPHICS_NORMAL);
-  dmd.drawLine(25,7,25,9,GRAPHICS_NORMAL);
-  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
-  
-  dmd.drawLine(22,8,29,8,GRAPHICS_INVERSE);
-  dmd.drawLine(27,6,27,7,GRAPHICS_INVERSE);
-}
+// SELECT_RED        4
+// SELECT_GREEN      5
+// PIN_DMD_nOE       9    // D9 active low Output Enable, setting this low lights all the LEDs in the selected rows. Can pwm it at very high frequency for brightness control.
+// PIN_DMD_A         6    // D6
+// PIN_DMD_B         7    // D7
+// PIN_DMD_CLK       13   // D13_SCK  is SPI Clock if SPI is used
+// PIN_DMD_SCLK      8    // D8
+// PIN_DMD_R_DATA    11   // D11_MOSI is SPI Master Out if SPI is used
+static long long count=0;
+static int second=0;//đếm giây
+static int t_red=60;//Lưu giá trị tời gian đèn đỏ trước khi cập nhật (nhận từ blue tooth)
+static int t_green=57;//Lưu giá trị tời gian đèn đỏ trước khi cập nhật (nhận từ blue tooth)
+unsigned long long red_light=60,green_light=57,orange_light=3;//Lưu giá trị thời gian đang xử lý.
+enum _STATE{GREEN=0,RED,YELLOW,INIT};// Trạng thái của biển báo
+_STATE STATE= INIT;
+static int range_animation=(int)(sizeof(animation)/sizeof(animation[0]));// Số lượng các hoạt động
+int id_red_animation=0;
+int bright=30;//Độ sáng của LED
 void ScanDMD()
 { 
   /*--------------------------------------------------------------------------------------
@@ -55,19 +37,25 @@ void ScanDMD()
 --------------------------------------------------------------------------------------*/
   dmd.scanDisplayBySPI();
   count++;
-  if(count>200){
+  if(count>400){
     count=0;
+    second++;
+    if(second>=(2*t_red+1)){
+      second=0;
+    }
   }
 }
 void setup(void)
 {
+  pinMode(SELECT_RED,OUTPUT);
+  pinMode(SELECT_GREEN,OUTPUT);
 /*--------------------------------------------------------------------------------------
   setup
   Called by the Arduino architecture before the main loop begins
 --------------------------------------------------------------------------------------*/
 
    //initialize TimerOne's interrupt/CPU usage used to scan and refresh the display
-   Timer1.initialize( 5000 );           //period in microseconds to call ScanDMD. Anything longer than 5000 (5ms) and you can see flicker.
+   Timer1.initialize( 2500 );           //period in microseconds to call ScanDMD. Anything longer than 5000 (5ms) and you can see flicker.
    Timer1.attachInterrupt( ScanDMD );   //attach the Timer1 interrupt to ScanDMD which goes to dmd.scanDisplayBySPI()
 
    //clear/init the DMD  pixels held in RAM
@@ -79,11 +67,102 @@ void setup(void)
   loop
   Arduino architecture main loop
 --------------------------------------------------------------------------------------*/
-
 void loop(void)
 {
- 
-  for(int j=0;j<16;j++){
+  switch(STATE){
+//**************************************
+    case RED:
+    
+    digitalWrite(SELECT_GREEN,LOW);
+    digitalWrite(SELECT_RED,HIGH);
+     for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+      }};
+    if(second<red_light){
+      int k=(second+count/200)*(range_animation/red_light);
+      dmd.writePixel(animation[k][1],animation[k][0],GRAPHICS_INVERSE,1);
+    dmd.writePixel(30-animation[k][1],animation[k][0],GRAPHICS_INVERSE,0);
+    };
+    if(second>red_light){
+      dmd.clearScreen( false );
+      STATE=GREEN;
+    };
+    break;
+//**************************************
+    case GREEN:
+    digitalWrite(SELECT_GREEN,HIGH);
+    digitalWrite(SELECT_RED,LOW);
+      for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+      }};
+     if(second<red_light){
+      int k=(second+(count/400))*(range_animation/green_light);
+      dmd.writePixel(animation[k][1],animation[k][0],GRAPHICS_INVERSE,1);
+      dmd.writePixel(30-animation[k][1],animation[k][0],GRAPHICS_INVERSE,0);
+    };
+    if(second>(2*t_red-3)){
+      dmd.clearScreen( false );
+      STATE=YELLOW;
+    };
+    break;
+//*****************************************
+    case YELLOW:
+    digitalWrite(SELECT_GREEN,HIGH);
+    digitalWrite(SELECT_RED,HIGH);
+     for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+      }};
+    if(second==2*red_light-3){
+      draw3(dmd);
+    };
+    if(second==2*red_light-2){
+      draw2(dmd);
+    };
+    if(second==2*red_light-1){
+      draw1(dmd);
+    };
+    if(second>=(2*red_light)){
+      dmd.clearScreen( false );
+      STATE=INIT;
+    };
+    break;
+//***************************************
+    case INIT:
+    digitalWrite(SELECT_GREEN,HIGH);
+    digitalWrite(SELECT_RED,HIGH);
+    dmd.clearScreen( false );
+    for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+        }};
+    STATE=RED;
+    break;
+    default:
+    digitalWrite(SELECT_GREEN,HIGH);
+    digitalWrite(SELECT_RED,HIGH);
+    
+    if(second%2==0){
+      for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+        }};
+    }
+    else{
+      for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_NORMAL,RG[j*32+i]);
+        }};
+    }
+    break;
+    
+  }
+  analogWrite(9,1023*(bright/100));
+  delay(5);
+ };
+  /*for(int j=0;j<16;j++){
   for(int i=0;i<32;i++){   
       dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
     }};
@@ -100,13 +179,13 @@ void loop(void)
       dmd.writePixel(i,j,GRAPHICS_INVERSE,test[j*32+i]);
     }};
   delay(500);
-  draw3();
+  draw3(dmd);
   delay(1000);
-  draw2();
+  draw2(dmd);
   delay(1000);
-  draw1();
+  draw1(dmd);
   delay(1000);*/
 
   
     
-};
+
