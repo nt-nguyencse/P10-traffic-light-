@@ -1,44 +1,10 @@
+#include <DMD.h> 
 #define max_char 100
-unsigned long long red_light=0,green_light=0,orange_light=0;
+
 long long time_tmp=0;
 byte index=0;
 char buffer[max_char]; 
 /////////////////////////////////////
-bool read_bluetooth(){
-  //Delete old messages
-  if(Serial.available()){       
-        for(int i=0; i<99; i++){
-            buffer[i] = '\0';
-        }      
-    index=0;
-  //Read new messages
-    Serial.setTimeout(100);
-    index=Serial.readBytesUntil("]",buffer,100);
-    Serial.flush();
-    return 1;
-  }else{
-    return 0;
-  }
-}
-long long setTime(const char* const buff,bool read_success){
-  if(read_success){
-    if ((index > 2) && index < (max_char-1)){
-      if(buff[2]=="_" && buff[3]=="["){
-        for(int i=0;i<(index-3);i++){
-          byte num= (byte)buff[i+2]-48;
-          if((num>9)&&(num<0)){
-            return -1;
-          }else{
-            time_tmp=time_tmp*10+num;
-          }
-          return time_tmp;
-        }
-        return -1;
-      }
-    }
-    return -1;
-  }
-}
 
 const byte animation[][2]={
 {7,0},{8,0},{6,0},{9,0},{7,1},{8,1},{10,0},{5,0},{4,0},{11,0},{6,1},{9,1},{7,2},{8,2},{3,0},{12,0},{10,1},{5,1},{6,2},{9,2},{7,3},{8,3},{2,0},{13,0},{4,1},
@@ -86,4 +52,37 @@ const bool test[512] ={
 /*14*/  1,1,1,0,0,1,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
 /*15*/  1,1,1,1,1,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1
 };
+void draw3(DMD _dmd){
+  _dmd.drawLine(22,8,29,8,GRAPHICS_NORMAL);
+  _dmd.drawLine(27,6,27,7,GRAPHICS_NORMAL);
+  _dmd.drawLine(24,5,22,5,GRAPHICS_NORMAL);
+  _dmd.drawLine(22,9,29,9,GRAPHICS_NORMAL);
+  _dmd.drawLine(27,7,27,8,GRAPHICS_NORMAL);
+  _dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(25,7,25,9,GRAPHICS_INVERSE);
+  _dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(28,10,22,10,GRAPHICS_INVERSE);
+  
+};
+void draw2(DMD _dmd){
+  _dmd.drawLine(24,10,22,10,GRAPHICS_NORMAL);
+  _dmd.drawLine(25,7,25,9,GRAPHICS_NORMAL);
+  _dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(25,5,25,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(28,10,26,10,GRAPHICS_INVERSE);
+  _dmd.drawLine(24,5,22,5,GRAPHICS_INVERSE);
+  
+}
+void draw1(DMD _dmd ){
+  _dmd.drawLine(25,5,25,10,GRAPHICS_NORMAL);
+  _dmd.drawLine(28,10,22,10,GRAPHICS_NORMAL);
+  _dmd.drawLine(24,5,22,5,GRAPHICS_NORMAL);
+  _dmd.drawLine(29,5,29,10,GRAPHICS_NORMAL);
+  _dmd.drawLine(25,7,25,9,GRAPHICS_NORMAL);
+  _dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+  
+  _dmd.drawLine(22,8,29,8,GRAPHICS_INVERSE);
+  _dmd.drawLine(27,6,27,7,GRAPHICS_INVERSE);
+}
 
