@@ -1,0 +1,542 @@
+
+/////////////////////////////////////
+#include <SPI.h>        //SPI.h must be included as DMD is written by SPI (the IDE complains otherwise)
+#include <DMD.h>        //
+#include <TimerOne.h>   //
+#include <avr/pgmspace.h>
+#include "sand_box.h"
+#include "SystemFont5x7.h"
+#include "Arial_black_16.h"
+//Fire up the DMD library as dmd
+#define DISPLAYS_ACROSS 1
+#define DISPLAYS_DOWN 1
+#define SELECT_RED        4
+#define SELECT_GREEN      5
+DMD dmd(DISPLAYS_ACROSS, DISPLAYS_DOWN);
+// SELECT_RED        4
+// SELECT_GREEN      5
+// PIN_DMD_nOE       9    // D9 active low Output Enable, setting this low lights all the LEDs in the selected rows. Can pwm it at very high frequency for brightness control.
+// PIN_DMD_A         6    // D6
+// PIN_DMD_B         7    // D7
+// PIN_DMD_CLK       13   // D13_SCK  is SPI Clock if SPI is used
+// PIN_DMD_SCLK      8    // D8
+// PIN_DMD_R_DATA    11   // D11_MOSI is SPI Master Out if SPI is used
+ unsigned long count=0;// tăng lên sau mỗi 5ms
+int second=0;// Tăng lên sau mỗi 500ms
+int t_red=60;// Tời gian đèn đỏ/xanh sáng
+int animation_red=sizeof(animation)/sizeof(animation[0]);//Số lượng hiệu ứng đèn xanh, đỏ
+int count_animation=0;
+
+
+enum _STATE{INIT_RED=0,RED,INIT_GREEN,GREEN,INIT_YELLOW,YELLOW,DEF};
+_STATE STATE=INIT_RED;//Trạng thái của hệ thống
+
+void clear_1st_num(){
+  dmd.drawFilledBox(19,0,3,13,GRAPHICS_NORMAL);
+}
+void clear_2nd_num(){
+  dmd.drawFilledBox(19,12,15,13,GRAPHICS_NORMAL);
+}
+ void draw3_yellow(){
+  dmd.drawFilledBox(29,5,21,10,GRAPHICS_NORMAL);
+  dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
+  dmd.drawLine(25,7,25,9,GRAPHICS_INVERSE);
+  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+  dmd.drawLine(28,10,22,10,GRAPHICS_INVERSE);
+
+ };
+void draw2_yellow(){
+  dmd.drawFilledBox(29,5,21,10,GRAPHICS_NORMAL);
+  dmd.drawLine(29,5,29,10,GRAPHICS_INVERSE);
+  dmd.drawLine(25,5,25,10,GRAPHICS_INVERSE);
+  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+  dmd.drawLine(28,10,26,10,GRAPHICS_INVERSE);
+  dmd.drawLine(24,5,22,5,GRAPHICS_INVERSE);
+
+ }
+void draw1_yellow(){
+  dmd.drawFilledBox(29,5,21,10,GRAPHICS_NORMAL);
+  dmd.drawLine(21,5,21,10,GRAPHICS_INVERSE);
+   dmd.drawLine(22,8,29,8,GRAPHICS_INVERSE);
+  dmd.drawLine(27,6,27,7,GRAPHICS_INVERSE);
+}
+void ScanDMD()
+{ 
+  /*--------------------------------------------------------------------------------------
+  Interrupt handler for Timer1 (TimerOne) driven DMD refresh scanning, this gets
+  called at the period set in Timer1.initialize();
+--------------------------------------------------------------------------------------*/
+  dmd.scanDisplayBySPI();
+  count++;
+  if(count%100==0){
+    second++;
+    if(second>4*t_red){
+      second=0;
+      count=0;
+    }
+    analogWrite(9,second);
+    }
+  }
+/*void init_bluetooth(){
+  attachInterrupt(USART_RX_vect,Bluetooth_ISR,RISING);
+}
+void Bluetooth_ISR(){
+  
+}*/
+void setup(void)
+{
+
+/*--------------------------------------------------------------------------------------
+  setup
+  Called by the Arduino architecture before the main loop begins
+--------------------------------------------------------------------------------------*/
+
+    //initialize TimerOne's interrupt/CPU usage used to scan and refresh the display
+   Timer1.initialize( 5000 );           //period in microseconds to call ScanDMD. Anything longer than 5000 (5ms) and you can see flicker.
+   Timer1.attachInterrupt( ScanDMD );   //attach the Timer1 interrupt to ScanDMD which goes to dmd.scanDisplayBySPI()
+
+    //clear/init the DMD  pixels held in RAM
+   dmd.clearScreen( false );   //true is normal (all pixels off), false is negative (all pixels on)
+   Serial.begin(9600);
+   pinMode(SELECT_RED,OUTPUT);
+   pinMode(SELECT_GREEN,OUTPUT); 
+   pinMode(9,OUTPUT); 
+}
+
+ /*--------------------------------------------------------------------------------------
+  loop
+  Arduino architecture main loop
+--------------------------------------------------------------------------------------*/
+
+ void loop(void)
+{
+  switch(STATE){
+    case INIT_RED:
+    second=0;
+    digitalWrite(SELECT_RED,HIGH);
+    digitalWrite(SELECT_GREEN,LOW);  
+    dmd.clearScreen(false);  
+    for(int j=0;j<16;j++){
+      for(int i=0;i<32;i++){   
+        dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+      }};
+    STATE=RED;
+
+    break;
+
+    ///////////////////////////////
+    //
+    /////////////////////////////
+    case RED:
+    
+    dmd.writePixel(animation[second][1],animation[second][0],GRAPHICS_INVERSE,1);
+    dmd.writePixel(30-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
+    
+     if(second>=2*t_red){
+      STATE=INIT_GREEN;
+      
+     };
+     break;
+
+     ////////////////////
+     //
+     ///////////////////
+     
+     case INIT_YELLOW:
+     
+     
+     digitalWrite(SELECT_RED,HIGH);
+    digitalWrite(SELECT_GREEN,HIGH);  
+    dmd.clearScreen(false);  
+    for(int j=0;j<16;j++){
+      for(int i=0;i<32;i++){   
+        dmd.writePixel(i,j,GRAPHICS_INVERSE,test[j*32+i]);
+      }};
+      STATE=YELLOW;
+      second=0;
+     break;
+     
+     //////////////////////////////
+     //
+     /////////////////////////////
+     
+     case YELLOW:
+     if((second>=1)&&(second<=3)){
+      draw3_yellow();
+     }
+     if((second>3)&&(second<=5)){
+      draw2_yellow();
+     }
+     if((second>5)&&(second<=7)){
+      draw1_yellow();
+     }
+     if(second>8){
+      STATE=INIT_RED;
+     }
+     break;
+
+     ////////////////////////
+     //
+     //////////////////////
+     
+     case INIT_GREEN:
+     second=0;
+          digitalWrite(SELECT_RED,LOW);
+    digitalWrite(SELECT_GREEN,HIGH);  
+    dmd.clearScreen(false);  
+    for(int j=0;j<16;j++){
+      for(int i=0;i<32;i++){   
+        dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+      }};
+     STATE=GREEN;
+
+     break;
+     case GREEN:
+    dmd.writePixel(animation[second][1],animation[second][0],GRAPHICS_INVERSE,1);
+    dmd.writePixel(30-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
+    if(second>=2*t_red){
+      STATE=INIT_YELLOW;
+     
+    }
+     break;
+  }
+}
+
+
+
+void draw9_1st(){
+  clear_1st_num();
+  //Number 9
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw8_1st(){
+   clear_1st_num();
+  //Number 8
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw7_1st(){
+   clear_1st_num();
+  //Num
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw6_1st(){
+   clear_1st_num();
+  //Number 6
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw5_1st(){
+   clear_1st_num();
+  //Number 5
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw4_1st(){
+   clear_1st_num();
+  //Number 4
+  //dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw3_1st(){
+   clear_1st_num();
+  //Number 3
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw2_1st(){
+   clear_1st_num();
+  //Number 2
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  //dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw1_1st(){
+   clear_1st_num();
+  //Num
+  //dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+void draw0_1st(){
+   clear_1st_num();
+  //Number 0
+  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+}
+///////////////////////////
+// Draw Number 2st
+///////////////////////////
+void draw0_2nd(){
+   clear_2nd_num();
+  //Number 0
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw1_2nd(){
+   clear_2nd_num();
+  //Number 1
+  //dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw2_2nd(){
+   clear_2nd_num();
+  //Number 2
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  //dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw3_2nd(){
+   clear_2nd_num();
+  //Number 3
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw4_2nd(){
+   clear_2nd_num();
+  //Number 4
+  //dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw5_2nd(){
+   clear_2nd_num();
+  //Number 5
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw6_2nd(){
+   clear_2nd_num();
+  //Number 0
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw7_2nd(){
+   clear_2nd_num();
+  //Number 0
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw8_2nd(){
+   clear_2nd_num();
+  //Number 8
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+void draw9_2nd(){
+   clear_2nd_num();
+  //Number 9
+  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
+  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*{
+  switch(STATE){
+    case RED:
+     for(int j=0;j<16;j++){
+  for(int i=0;i<32;i++){   
+      dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+    }};
+  delay(10);
+  for(int k = 0; k < sizeof(animation)/sizeof(animation[0]); k++)
+  {
+    dmd.writePixel(animation[k][1],animation[k][0],GRAPHICS_INVERSE,1);
+    dmd.writePixel(30-animation[k][1],animation[k][0],GRAPHICS_INVERSE,0);
+    delay(200);
+  }
+  
+    case GREEN:
+         for(int j=0;j<16;j++){
+  for(int i=0;i<32;i++){   
+      dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+    }};
+  delay(3000);
+    case YELLOW:
+    dmd.clearScreen( false );
+    draw3();delay(1000);
+    draw2();delay(1000);
+    draw1();delay(1000);
+    if(second==2*t_red-3){
+      draw3();
+    };
+    if(second==2*t_red-2){
+      draw2();
+    };
+    if(second==2*t_red-1){
+      draw1();
+    };
+    if(second>=(2*t_red)){
+      dmd.clearScreen( false );
+      
+    };
+    case DEF:
+    STATE=DEF;
+    if(second%2==0){
+      for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_INVERSE,1);
+        }};
+    }
+    else{
+      for(int j=0;j<16;j++){
+        for(int i=0;i<32;i++){   
+          dmd.writePixel(i,j,GRAPHICS_NORMAL,1);
+        }};
+    break;
+  }
+  delay(2);
+  }}
+/*
+   for(int j=0;j<16;j++){
+  for(int i=0;i<32;i++){   
+      dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
+    }};
+  delay(500);
+  for(int k = 0; k < sizeof(animation)/sizeof(animation[0]); k++)
+  {
+    dmd.writePixel(animation[k][1],animation[k][0],GRAPHICS_INVERSE,1);
+    dmd.writePixel(30-animation[k][1],animation[k][0],GRAPHICS_INVERSE,0);
+    delay(200);
+  }
+  delay(2000);
+  *//*for(int j=0;j<16;j++){
+  for(int i=0;i<32;i++){   
+      dmd.writePixel(i,j,GRAPHICS_INVERSE,test[j*32+i]);
+    }};
+  delay(500);
+  draw3();
+  delay(1000);
+  draw2();
+  delay(1000);
+  draw1();
+  delay(1000);
+
+
+
+ };*/
