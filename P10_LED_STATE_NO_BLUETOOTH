@@ -734,7 +734,7 @@ void draw9_2nd(){
 //........................................................
  void draw_slow(){
  dmd.clearScreen(false);
- 
+ dmd.writePixel(2,11,GRAPHICS_INVERSE,1)
  }
 
 
