@@ -717,7 +717,25 @@ void draw9_2nd(){
   dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
 }
 
-
+//........................................................
+//...SSSSSSS....LLLL.........OOOOOOO...OOWWW..WWWWW...WW..
+//..SSSSSSSSS...LLLL........OOOOOOOOOO..OWWW..WWWWW..WWW..
+//..SSSSSSSSSS..LLLL.......OOOOOOOOOOOO.OWWW..WWWWWW.WWW..
+//.SSSSS..SSSS..LLLL.......OOOOO..OOOOO.OWWW.WWWWWWW.WWW..
+//.SSSSS........LLLL......LOOOO....OOOOOOWWW.WWWWWWW.WWW..
+//..SSSSSSS.....LLLL......LOOO......OOOO.WWWWWWWWWWW.WWW..
+//...SSSSSSSSS..LLLL......LOOO......OOOO.WWWWWWW.WWWWWWW..
+//.....SSSSSSS..LLLL......LOOO......OOOO.WWWWWWW.WWWWWWW..
+//........SSSSS.LLLL......LOOOO....OOOOO.WWWWWWW.WWWWWWW..
+//.SSSS....SSSS.LLLL.......OOOOO..OOOOO..WWWWWWW.WWWWWWW..
+//.SSSSSSSSSSSS.LLLLLLLLLL.OOOOOOOOOOOO...WWWWW...WWWWW...
+//..SSSSSSSSSS..LLLLLLLLLL..OOOOOOOOOO....WWWWW...WWWWW...
+//...SSSSSSSS...LLLLLLLLLL....OOOOOO......WWWWW...WWWWW...
+//........................................................
+ void draw_slow(){
+ dmd.clearScreen(false);
+ 
+ }
 
 
 
