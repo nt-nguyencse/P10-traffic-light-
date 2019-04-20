@@ -78,6 +78,8 @@ void clear_2nd_num(){// Clear box include number 2nd already show
   dmd.drawLine(16,15,13,15,GRAPHICS_NORMAL);//f
   dmd.drawLine(13,12,13,15,GRAPHICS_NORMAL);//g
 }
+//Draw SLOW state
+void draw_SLOW();
 //Draw number in GREEN or RED state
 
 void draw0_1st();
@@ -732,11 +734,32 @@ void draw9_2nd(){
 //..SSSSSSSSSS..LLLLLLLLLL..OOOOOOOOOO....WWWWW...WWWWW...
 //...SSSSSSSS...LLLLLLLLLL....OOOOOO......WWWWW...WWWWW...
 //........................................................
- void draw_slow(){
+ void draw_SLOW(){
  dmd.clearScreen(false);
- dmd.writePixel(2,11,GRAPHICS_INVERSE,1)
+ //Draw S
+ dmd.writePixel(30,10,GRAPHICS_INVERSE,1);
+ dmd.drawLine(31,6,31,9,GRAPHICS_INVERSE);
+ dmd.drawLine(30,5,29,5,GRAPHICS_INVERSE);
+ dmd.drawLine(28,6,28,8,GRAPHICS_INVERSE);
+ dmd.writePixel(27,9,GRAPHICS_INVERSE,1);
+ dmd.drawLine(31,6,31,9,GRAPHICS_INVERSE);
+ dmd.drawLine(26,10,25,10,GRAPHICS_INVERSE);
+ dmd.writePixel(25,5,GRAPHICS_INVERSE,1);
+ dmd.drawLine(24,6,24,9,GRAPHICS_INVERSE);
+ //Draw L
+ dmd.drawLine(22,5,16,5,GRAPHICS_INVERSE);dmd.drawLine(16,6,16,10,GRAPHICS_INVERSE);
+ //Draw O
+ dmd.drawLine(9,5,13,5,GRAPHICS_INVERSE);
+ dmd.drawLine(9,10,13,10,GRAPHICS_INVERSE);
+ dmd.drawLine(14,6,14,10,GRAPHICS_INVERSE);
+ dmd.drawLine(8,6,8,10,GRAPHICS_INVERSE);
+ 
+ //Draw W
+ dmd.drawLine(6,5,2,5,GRAPHICS_INVERSE);
+ dmd.drawLine(6,11,2,11,GRAPHICS_INVERSE);
+ dmd.drawLine(5,8,0,8,GRAPHICS_INVERSE);
+ 
  }
-
 
 
 
