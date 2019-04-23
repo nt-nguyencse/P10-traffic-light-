@@ -883,6 +883,12 @@ void assignNumber(String str) {
   switch (str[1]) {
     case '0':
       switch (str[0]) {
+        case '0':
+          STATE = INIT_RED;
+          break;
+        case '1':
+          STATE = DEF;
+          break;
         case '3':
           getNum = 30;
           break;
@@ -911,6 +917,9 @@ void assignNumber(String str) {
       break;
     case '1':
       switch (str[0]) {
+        case '0':
+          STATE = RED;
+          break;
         case '3':
           getNum = 31;
           break;
@@ -939,6 +948,9 @@ void assignNumber(String str) {
       break;
     case '2':
       switch (str[0]) {
+          case '0':
+            STATE = INIT_GREEN;
+            break;
           case '3':
             getNum = 32;
             break;
@@ -967,6 +979,9 @@ void assignNumber(String str) {
       break;
     case '3':
       switch (str[0]) {
+          case '0':
+            STATE = GREEN;
+            break;
           case '3':
             getNum = 33;
             break;
@@ -995,6 +1010,9 @@ void assignNumber(String str) {
       break;
     case '4':
       switch (str[0]) {
+          case '0':
+            STATE = INIT_YELLOW;
+            break;
           case '3':
             getNum = 34;
             break;
@@ -1023,6 +1041,9 @@ void assignNumber(String str) {
       break;
     case '5':
       switch (str[0]) {
+          case '0':
+            STATE = YELLOW;
+            break;
           case '3':
             getNum = 35;
             break;
@@ -1051,6 +1072,9 @@ void assignNumber(String str) {
       break;
     case '6':
       switch (str[0]) {
+          case '0':
+            STATE = SLOW;
+            break;
           case '3':
             getNum = 36;
             break;
@@ -1079,6 +1103,9 @@ void assignNumber(String str) {
       break;
     case '7':
       switch (str[0]) {
+          case '0':
+            STATE = NOT_TURN_LEFT;
+            break;
           case '3':
             getNum = 37;
             break;
@@ -1107,6 +1134,9 @@ void assignNumber(String str) {
       break;
     case '8':
       switch (str[0]) {
+          case '0':
+            STATE = NOT_TURN_RIGHT;
+            break;
           case '3':
             getNum = 38;
             break;
@@ -1135,6 +1165,9 @@ void assignNumber(String str) {
         break;
     case '9':
       switch (str[0]) {
+          case '0':
+            STATE = WARNING;
+            break;
           case '3':
             getNum = 39;
             break;
@@ -1163,7 +1196,7 @@ void assignNumber(String str) {
       break;
     default:
       str = "";
-      //Serial.println("E");
+      Serial.println("E");
       break;
   }
 }
