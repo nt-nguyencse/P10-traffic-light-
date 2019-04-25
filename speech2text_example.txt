@@ -1,0 +1,4 @@
+curl -X POST -u "apikey:{cLR5aTlONiYrcGTq_On_5n3oDBh9Kw79sZQ42aFowOjz}" \
+--header "Content-Type: audio/flac" \
+--data-binary @{Downloads}audio-file.flac \
+"{https://gateway-wdc.watsonplatform.net/speech-to-text/api}/v1/recognize"
