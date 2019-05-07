@@ -884,7 +884,7 @@ void assignNumber(String str) {
     case '0':
       switch (str[0]) {
         case '0':
-          STATE = INIT_RED;
+          STATE = RED;
           break;
         case '1':
           STATE = DEF;
@@ -949,7 +949,7 @@ void assignNumber(String str) {
     case '2':
       switch (str[0]) {
           case '0':
-            STATE = INIT_GREEN;
+            STATE = GREEN;
             break;
           case '3':
             getNum = 32;
@@ -1011,7 +1011,7 @@ void assignNumber(String str) {
     case '4':
       switch (str[0]) {
           case '0':
-            STATE = INIT_YELLOW;
+            STATE = YELLOW;
             break;
           case '3':
             getNum = 34;
