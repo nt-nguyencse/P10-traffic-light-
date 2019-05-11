@@ -1,3 +1,4 @@
+    
 //.............................................................................................
 //.VVVV....VVVVV..AAAA.....AARRRRRRRRR..RRII.....AAAA.....AABBBBBBBBB..BBLL.......LEEEEEEEEEE..
 //.VVVV....VVVV..AAAAAA....AARRRRRRRRRR.RRII....AAAAAA....AABBBBBBBBBB.BBLL.......LEEEEEEEEEE..
@@ -65,22 +66,22 @@ _STATE STATE=NOT_TURN_RIGHT;//Trạng thái của hệ thống
 //.FFFF.........UUUUUUU....NNNN...NNNN....CCCCCCC.......TTTT...TIIII....OOOOOO.....NNNN...NNNN..
 //..............................................................................................
 void clear_1st_num(){// Clear box include number 1st already show
-  dmd.drawLine(19,0,19,3,GRAPHICS_NORMAL);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_NORMAL);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_NORMAL);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_NORMAL);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_NORMAL);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_NORMAL);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_NORMAL);//d
-  dmd.drawLine(16,0,13,0,GRAPHICS_NORMAL);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_NORMAL);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_NORMAL);//g
+  dmd.drawLine(16,0,14,0,GRAPHICS_NORMAL);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_NORMAL);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_NORMAL);//g
 }
 void clear_2nd_num(){// Clear box include number 2nd already show
-  dmd.drawLine(19,12,19,15,GRAPHICS_NORMAL);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_NORMAL);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_NORMAL);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_NORMAL);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_NORMAL);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_NORMAL);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_NORMAL);//d
-  dmd.drawLine(16,12,13,12,GRAPHICS_NORMAL);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_NORMAL);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_NORMAL);//g
+  dmd.drawLine(16,12,14,12,GRAPHICS_NORMAL);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_NORMAL);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_NORMAL);//g
 }
 //Draw number in GREEN or RED state
 void not_turn_left();
@@ -259,8 +260,8 @@ void setup()
 //................................................................................
     case INIT_RED:
     second=0;
-    digitalWrite(SELECT_RED,HIGH);
-    digitalWrite(SELECT_GREEN,LOW);  
+    digitalWrite(SELECT_RED,LOW);
+    digitalWrite(SELECT_GREEN,HIGH);  
     dmd.clearScreen(false);  
     for(int j=0;j<16;j++){
       for(int i=0;i<32;i++){   
@@ -422,8 +423,8 @@ void setup()
      
      case INIT_GREEN:
      second=0;
-          digitalWrite(SELECT_RED,LOW);
-    digitalWrite(SELECT_GREEN,HIGH);  
+          digitalWrite(SELECT_RED,HIGH);
+    digitalWrite(SELECT_GREEN,LOW);  
     dmd.clearScreen(false);  
     for(int j=0;j<16;j++){
       for(int i=0;i<32;i++){   
@@ -538,110 +539,110 @@ void draw9_1st(){
   //Number 9
   dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
   dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw8_1st(){
   
   //Number 8
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw7_1st(){
   
   //Num
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw6_1st(){
    
   //Number 6
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  //dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw5_1st(){
    
   //Number 5
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  //dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw4_1st(){
    
   //Number 4
-  //dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw3_1st(){
   
   //Number 3
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw2_1st(){
   
   //Number 2
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  //dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  //dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw1_1st(){
   
   //Num
-  //dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 void draw0_1st(){
   
   //Number 0
-  dmd.drawLine(19,0,19,3,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,0,16,0,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,3,16,3,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,0,18,3,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,0,16,0,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,3,16,3,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,0,16,3,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,0,13,0,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,3,13,3,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,0,13,3,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,0,14,0,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,3,14,3,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,0,14,3,GRAPHICS_INVERSE);//g
 }
 ///////////////////////////
 // Draw Number 2st
@@ -649,112 +650,112 @@ void draw0_1st(){
 void draw0_2nd(){
   
   //Number 0
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw1_2nd(){
  
   //Number 1
-  //dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw2_2nd(){
   
   //Number 2
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  //dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  //dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw3_2nd(){
    
   //Number 3
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw4_2nd(){
    
   //Number 4
-  //dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  //dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw5_2nd(){
    
   //Number 5
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  //dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw6_2nd(){
   
   //Number 0
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  //dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  //dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw7_2nd(){
   
   //Number 0
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  //dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  //dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   //dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  //dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  //dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw8_2nd(){
    
   //Number 8
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 void draw9_2nd(){
    
   //Number 9
-  dmd.drawLine(19,12,19,15,GRAPHICS_INVERSE);//a
-  dmd.drawLine(19,12,16,12,GRAPHICS_INVERSE);//b
-  dmd.drawLine(19,15,16,15,GRAPHICS_INVERSE);//c
+  dmd.drawLine(18,12,18,15,GRAPHICS_INVERSE);//a
+  dmd.drawLine(18,12,16,12,GRAPHICS_INVERSE);//b
+  dmd.drawLine(18,15,16,15,GRAPHICS_INVERSE);//c
   dmd.drawLine(16,12,16,15,GRAPHICS_INVERSE);//d
-  //dmd.drawLine(16,12,13,12,GRAPHICS_INVERSE);//e
-  dmd.drawLine(16,15,13,15,GRAPHICS_INVERSE);//f
-  dmd.drawLine(13,12,13,15,GRAPHICS_INVERSE);//g
+  //dmd.drawLine(16,12,14,12,GRAPHICS_INVERSE);//e
+  dmd.drawLine(16,15,14,15,GRAPHICS_INVERSE);//f
+  dmd.drawLine(14,12,14,15,GRAPHICS_INVERSE);//g
 }
 //Not turn LEFT signal
 void not_turn_left(){
@@ -919,6 +920,7 @@ void assignNumber(String str) {
       switch (str[0]) {
         case '0':
           STATE = RED;
+          dmd.clearScreen(false);
           break;
         case '3':
           getNum = 31;
@@ -981,6 +983,7 @@ void assignNumber(String str) {
       switch (str[0]) {
           case '0':
             STATE = GREEN;
+            dmd.clearScreen(false);
             break;
           case '3':
             getNum = 33;
@@ -1012,6 +1015,7 @@ void assignNumber(String str) {
       switch (str[0]) {
           case '0':
             STATE = INIT_YELLOW;
+            
             break;
           case '3':
             getNum = 34;
@@ -1043,6 +1047,7 @@ void assignNumber(String str) {
       switch (str[0]) {
           case '0':
             STATE = YELLOW;
+            dmd.clearScreen(false);
             break;
           case '3':
             getNum = 35;
@@ -1105,6 +1110,7 @@ void assignNumber(String str) {
       switch (str[0]) {
           case '0':
             STATE = NOT_TURN_LEFT;
+            dmd.clearScreen(false);
             break;
           case '3':
             getNum = 37;
@@ -1136,6 +1142,7 @@ void assignNumber(String str) {
       switch (str[0]) {
           case '0':
             STATE = NOT_TURN_RIGHT;
+            dmd.clearScreen(false);
             break;
           case '3':
             getNum = 38;
