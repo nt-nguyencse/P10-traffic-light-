@@ -49,7 +49,7 @@ bool do_animation=true;
 byte getNum=0;     ////Biến số lấy từ Bluetooth
 
 enum _STATE{INIT_RED=0,RED,INIT_GREEN,GREEN,INIT_YELLOW,YELLOW,SLOW,NOT_TURN_LEFT,NOT_TURN_RIGHT,WARNING,DEF};
-_STATE STATE=NOT_TURN_RIGHT;//Trạng thái của hệ thống
+_STATE STATE=INIT_RED;//Trạng thái của hệ thống
 //..............................................................................................
 //.FFFFFFFFFF.UUUU...UUUU..NNNN...NNNN....CCCCCCC....TTTTTTTTTTTIIII...OOOOOOO.....NNNN...NNNN..
 //.FFFFFFFFFF.UUUU...UUUU..NNNNN..NNNN...CCCCCCCCC...TTTTTTTTTTTIIII..OOOOOOOOOO...NNNNN..NNNN..
@@ -140,6 +140,7 @@ void draw1_yellow(){
    dmd.drawLine(22,8,29,8,GRAPHICS_INVERSE);
   dmd.drawLine(27,6,27,7,GRAPHICS_INVERSE);
 }
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void ScanDMD() { 
 //Always 5ms MCU do this function
@@ -263,6 +264,7 @@ void setup()
     digitalWrite(SELECT_RED,LOW);
     digitalWrite(SELECT_GREEN,HIGH);  
     dmd.clearScreen(false);  
+   
     for(int j=0;j<16;j++){
       for(int i=0;i<32;i++){   
         dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
@@ -289,7 +291,7 @@ void setup()
     case RED:
     if(do_animation){
     dmd.writePixel(animation[second][1],animation[second][0],GRAPHICS_INVERSE,1);
-    dmd.writePixel(30-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
+    dmd.writePixel(31-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
     do_animation=false;
     }
      if(second>=2*t_red){
@@ -426,6 +428,7 @@ void setup()
           digitalWrite(SELECT_RED,HIGH);
     digitalWrite(SELECT_GREEN,LOW);  
     dmd.clearScreen(false);  
+  
     for(int j=0;j<16;j++){
       for(int i=0;i<32;i++){   
         dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
@@ -453,7 +456,7 @@ void setup()
      if(do_animation){
       do_animation=false;
     dmd.writePixel(animation[second][1],animation[second][0],GRAPHICS_INVERSE,1);
-    dmd.writePixel(30-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
+    dmd.writePixel(31-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
     }
     if(second>=2*t_red){
       STATE=INIT_YELLOW;
