@@ -45,10 +45,11 @@ int animation_red=sizeof(animation)/sizeof(animation[0]);//Số lượng hiệu 
 int count_animation=0;
 bool clear_num_once_time=true;
 bool do_animation=true;
+bool emergency=false;
 
 byte getNum=0;     ////Biến số lấy từ Bluetooth
 
-enum _STATE{INIT_RED=0,RED,INIT_GREEN,GREEN,INIT_YELLOW,YELLOW,SLOW,NOT_TURN_LEFT,NOT_TURN_RIGHT,WARNING,DEF};
+enum _STATE{INIT_RED=0,RED,INIT_GREEN,GREEN,INIT_YELLOW,YELLOW,SLOW,NOT_TURN_LEFT,NOT_TURN_RIGHT,WARNING,EMERGENCY,TRAIN_COMING,DEF};
 _STATE STATE=INIT_RED;//Trạng thái của hệ thống
 //..............................................................................................
 //.FFFFFFFFFF.UUUU...UUUU..NNNN...NNNN....CCCCCCC....TTTTTTTTTTTIIII...OOOOOOO.....NNNN...NNNN..
@@ -87,6 +88,7 @@ void clear_2nd_num(){// Clear box include number 2nd already show
 void not_turn_left();
 void not_turn_right();
 void draw_SLOW();
+void draw_warning();
 void draw0_1st();
 void draw1_1st();
 void draw2_1st();
@@ -152,12 +154,11 @@ void ScanDMD() {
     if(second>4*t_red){
       second=0;
       count=0;
-    }
-    
-    }
+    }}
    if(count%200==0){
     count_number--;
     clear_num_once_time=true;
+    emergency=true;
     if (count_number<0){
       count_number=t_red;
     }
@@ -222,6 +223,31 @@ void setup()
   
   
   switch(STATE){
+    case TRAIN_COMING:
+    
+    if(second%2==0){
+      
+      digitalWrite(SELECT_RED,LOW);
+      digitalWrite(SELECT_GREEN,HIGH);
+      dmd.clearScreen(false);
+      dmd.drawFilledBox(0,0,15,15,GRAPHICS_INVERSE);
+      
+    }else{
+      
+      digitalWrite(SELECT_RED,HIGH);
+      digitalWrite(SELECT_GREEN,HIGH);
+      dmd.clearScreen(false);
+      dmd.drawFilledBox(15,0,31,15,GRAPHICS_INVERSE);
+      delay(100);
+    }
+    break;
+    case EMERGENCY:
+    digitalWrite(SELECT_RED,LOW);
+    digitalWrite(SELECT_GREEN,HIGH);
+    dmd.drawFilledBox(7,5,24,10,GRAPHICS_INVERSE);
+    dmd.drawFilledBox(13,0,18,15,GRAPHICS_INVERSE);
+    delay(100);
+    break;
     case WARNING:
     if (second%2==0){
       draw_warning();
@@ -230,11 +256,15 @@ void setup()
     }
     break;
     case NOT_TURN_RIGHT:
+    if(second%2==0){
     not_turn_right();
+    }
     break;
     /////////////////
     case NOT_TURN_LEFT:
+    if(second%2==0){
     not_turn_left();
+    }
     break;
     /////////////////
     case SLOW:
@@ -271,7 +301,7 @@ void setup()
       }};
     count_number=t_red;
     STATE=RED;
-
+    
     break;
 //........................................
 //.RRRRRRRRRR...EEEEEEEEEEE.EDDDDDDDD.....
@@ -297,6 +327,7 @@ void setup()
      if(second>=2*t_red){
       STATE=INIT_GREEN;
       
+
      };
     
    if(clear_num_once_time){
@@ -376,6 +407,7 @@ void setup()
       }};
       STATE=YELLOW;
       second=0;
+     
      break;
 //...............................................................................
 //.YYYY....YYYY.EEEEEEEEEEE.LLLL.......LLLL.........OOOOOOO...OOWWW..WWWWW...WW..
@@ -405,6 +437,8 @@ void setup()
      if(second>8){
       STATE=INIT_RED;
      }
+     
+    
      break;
 
 //.........................................................................................................
@@ -425,15 +459,15 @@ void setup()
      
      case INIT_GREEN:
      second=0;
-          digitalWrite(SELECT_RED,HIGH);
+    digitalWrite(SELECT_RED,HIGH);
     digitalWrite(SELECT_GREEN,LOW);  
     dmd.clearScreen(false);  
-  
+   
     for(int j=0;j<16;j++){
       for(int i=0;i<32;i++){   
         dmd.writePixel(i,j,GRAPHICS_INVERSE,RG[j*32+i]);
       }};
-      count_number=t_red;
+    count_number=t_red;
      STATE=GREEN;
 
      break;
@@ -454,19 +488,19 @@ void setup()
 //..................................................................
      case GREEN:
      if(do_animation){
-      do_animation=false;
     dmd.writePixel(animation[second][1],animation[second][0],GRAPHICS_INVERSE,1);
     dmd.writePixel(31-animation[second][1],animation[second][0],GRAPHICS_INVERSE,0);
+    do_animation=false;
     }
-    if(second>=2*t_red){
+     if(second>=2*t_red){
       STATE=INIT_YELLOW;
-     
-    }
-  if(clear_num_once_time){
+      };
+    
+   if(clear_num_once_time){
      clear_1st_num();
      clear_2nd_num();
    clear_num_once_time=false;
-  switch((count_number/10)%10){
+     switch((count_number/10)%10){
       case 0:
       draw0_1st();break;
       case 1:
@@ -510,13 +544,14 @@ void setup()
       case 9:
       draw9_2nd();break;
      }
-  }
+};
      break;
   }
 
   demoBluetooth();
-  delay(100);
-
+  
+  delay(50);
+  
 }
 
 
@@ -877,7 +912,9 @@ void demoBluetooth() {
     Serial.println(str);
     str[2] = '\0';
     assignNumber(str);
+    if((getNum >29) && (getNum != t_red)){ 
     t_red = getNum;
+    }
   }
   
 }
@@ -922,7 +959,7 @@ void assignNumber(String str) {
     case '1':
       switch (str[0]) {
         case '0':
-          STATE = RED;
+          STATE = TRAIN_COMING;
           dmd.clearScreen(false);
           break;
         case '3':
@@ -985,7 +1022,7 @@ void assignNumber(String str) {
     case '3':
       switch (str[0]) {
           case '0':
-            STATE = GREEN;
+            STATE = EMERGENCY;
             dmd.clearScreen(false);
             break;
           case '3':
